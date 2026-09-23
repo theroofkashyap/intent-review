@@ -1,6 +1,6 @@
 ---
 name: receipts
-description: Attach a verification receipt to every code change, recording what was actually run, what was not checked, and what was assumed about code that was never opened. Use this whenever writing, editing, refactoring, debugging, or fixing code that another person will review or merge - which is almost always. Apply it to every non-trivial change without being asked, including bug fixes, new features, refactors, migrations, and dependency updates.
+description: Attach a verification receipt to every code change, recording replayable commands and observed results, what was not checked, and what was assumed about code that was never opened. A later review will try to re-run those commands. Use this whenever writing, editing, refactoring, debugging, or fixing code that another person will review or merge - which is almost always. Apply it to every non-trivial change without being asked, including bug fixes, new features, refactors, migrations, and dependency updates.
 ---
 
 # Receipts
@@ -55,11 +55,11 @@ ALWAYS use this template, in this order:
 
 ## Rules that make the receipt worth reading
 
-**Verified means executed.** A command belongs under Verified only if you ran it in this session and saw the output. If you did not run it, it is not verified. "Tests should pass" is a hope, not a verification. It goes under Not verified.
+**Verified means executed, and replayable.** A command belongs under Verified only if you ran it in this session and saw the output. Each line is one exact command plus what you observed: a count, an exit code, or a short quoted line. A later review will try to run that command. If you cannot name it, the item is Not verified. "Tests should pass" is a hope. A claim with no command, or a result that disagrees with a re-run, is a finding against the change.
 
 **Do not pad Verified.** A typecheck passing does not verify behavior. A linter passing does not verify correctness. Say what each check actually proves, not that a green tick appeared.
 
-**Never leave Not verified empty to look good.** An empty Not verified is a strong claim: that every behavior this change can affect has an executed check behind it. That is rarely true. On the rare occasion it is, say why in one line.
+**Never leave Not verified empty to look good.** An empty Not verified is a strong claim: that every behavior this change can affect has an executed check behind it. That is rarely true. On the rare occasion it is, say why in one line. Each item names the behavior and the command that would settle it.
 
 **Be specific about what is untested.** "Did not test edge cases" is useless. "Did not test the empty-array path in `parseRows`, which is now reachable because the early return moved" is something a reviewer can act on in ten seconds.
 

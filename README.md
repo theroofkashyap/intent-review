@@ -12,7 +12,7 @@ These Markdown skills help preserve the purpose of a code change and connect it 
 | [review-against-intent](skills/review-against-intent/SKILL.md) | When reviewing a diff or PR | Evidence-backed findings, intent coverage, and verification gaps |
 | [receipts](skills/receipts/SKILL.md) | As the coding agent completes a non-trivial change | Checks actually run, unchecked behavior, assumptions, and where to inspect first |
 
-Each skill is usable independently. For the full workflow, capture intent before coding, have the coding agent produce a receipt afterward, and give the reviewer the intent, diff, and available verification evidence.
+Each skill is usable independently. The product is one review of a diff. `review-against-intent` reconstructs intent when none was recorded, labeling every inference, and it audits a receipt when one exists. A verified line with no replayable command, or a result that disagrees with a re-run, is a finding. Capturing intent beforehand and attaching a receipt are optional. They give the review better inputs. They are not steps the human has to perform.
 
 ## Use with your coding agent
 
@@ -42,29 +42,23 @@ your-codebase/
 
 For that optional Codex setup, see the [official skill documentation](https://learn.chatgpt.com/docs/build-skills). The workflow below applies to any compatible agent; provide the skill file paths when native discovery is unavailable.
 
-Before implementation:
+The review, which is the only required step:
+
+```text
+Use review-against-intent to review [explicit diff or PR] against this request:
+[original request]. Reconstruct intent where none was recorded, keep inferences
+labeled, audit any receipt by re-running claimed commands, and report unsupported
+verification claims as findings.
+```
+
+Optional, before implementation, when you want the intent fixed in advance:
 
 ```text
 Use capture-intent to record the intent for this change: [request].
 Then implement it and use receipts to report the verification evidence.
 ```
 
-In a review session with the intent record available:
-
-```text
-Use review-against-intent to review [explicit diff or PR].
-The intent record is [location or pasted text]. Identify concrete mismatches,
-independent correctness issues, and important verification gaps.
-```
-
-For an existing change without an intent record:
-
-```text
-Use review-against-intent to review [explicit diff or PR] against this request:
-[original request]. Keep inferred intent separate from stated requirements.
-```
-
-The intent record stays in chat or the project's established location, and can be carried into a PR description. These skills do not require a new tracking file or an external service.
+The intent record stays in chat or the project's established location, and can be carried into a PR description. These skills do not require a new tracking file or an external service. Receipt lines are exact commands and observed results, so the review can replay them.
 
 ## Current scope
 

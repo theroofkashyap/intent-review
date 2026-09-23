@@ -1,11 +1,11 @@
 ---
 name: review-against-intent
-description: Review a code diff or pull request against its intended outcome, checking missing behavior, violated constraints, unintended scope, and verification gaps. Use when asked to review agent-written changes or assess whether an implementation fulfills its request. Works with a recorded intent or partial source context; does not implement fixes unless requested.
+description: Review a code diff or pull request against its intended outcome, checking missing behavior, violated constraints, unintended scope, and verification gaps. Audits any receipt by re-running claimed commands and reports unsupported verification claims as findings. Use when asked to review agent-written changes or assess whether an implementation fulfills its request. Works from a diff alone, or with a recorded intent; does not implement fixes unless requested.
 ---
 
 # Review against intent
 
-Reduce the work a human needs to reconstruct a change. Establish what was intended, follow how the implementation delivers it, and report concrete mismatches with evidence.
+Reduce the work a human needs to reconstruct a change. One review of a diff is the whole job: establish what was intended, follow how the implementation delivers it, audit any verification claims, and report concrete mismatches with evidence. Do not stop to request an intent record or a receipt. Neither is required. When they exist, they are claims to check.
 
 ## Establish the review boundary
 
@@ -44,6 +44,17 @@ Read relevant tests to see what they assert, not just their names. Distinguish s
 Do not claim an earlier command ran or did not run without evidence. State when execution history is unavailable. Typechecking and linting do not establish the requested behavior; test success supports only the paths and assertions actually covered.
 
 Missing verification is a gap, not proof of a defect. Describe the behavior left uncertain and the check that would resolve it. Do not flood the review with speculative edge cases unrelated to the change.
+
+## Audit reported verification
+
+A receipt is a stack of claims. Check them. Do not treat the coding agent's account as evidence.
+
+- A Verified line with no exact command, or with only a summary such as "tests passed," is a finding: an unsupported verification claim. Cite the line.
+- Re-run each claimed command that is safe and local. If the result disagrees with the receipt, that disagreement is a finding. Quote both results. If you cannot re-run it, the claim stays unconfirmed; say so.
+- On a non-trivial change, an empty Not verified, or one that names no behavior and no settling command, is a finding.
+- Open each material Assumed target. A false assumption is a finding. An assumption you could not open stays listed as open.
+
+If you wrote the change under review, say so, and do not count your earlier claims as executed evidence unless you re-run them in this review. If no receipt exists, do not send the human to collect one. Absence of executed evidence is the starting state. Name the single check that would most change confidence.
 
 ## Return a compact review
 

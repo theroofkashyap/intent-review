@@ -5,7 +5,7 @@ description: Record the intended outcome, observable acceptance criteria, constr
 
 # Capture intent
 
-Give the eventual reviewer a compact account of what the change is supposed to accomplish, grounded in the request rather than reverse-engineered from the implementation.
+Give the eventual reviewer a compact account of what the change is supposed to accomplish, grounded in the request rather than reverse-engineered from the implementation. This record is optional. A review can reconstruct a labeled provisional intent from the request and the diff; capture one only when the human wants it fixed before coding.
 
 ## Capture before implementation
 
